@@ -17,10 +17,6 @@ module ForemanDocker
       false
     end
 
-    def provided_attributes
-      super.merge({:mac => :mac})
-    end
-
     #FIXME
     def max_cpu_count
       8
@@ -54,7 +50,19 @@ module ForemanDocker
     end
 
     def vm_instance_defaults
-      ActiveSupport::HashWithIndifferentAccess.new('name' => "foreman_#{Time.now.to_i}", 'cmd' => ['/bin/bash'])
+      ActiveSupport::HashWithIndifferentAccess.new('name' => "foreman_#{Time.now.to_i}", 'cmd' => '/bin/bash')
+    end
+
+    def ssh_provisioning_supported?
+      false
+    end
+
+    def requires_os?
+      false
+    end
+
+    def requires_architecture?
+      false
     end
 
     protected
