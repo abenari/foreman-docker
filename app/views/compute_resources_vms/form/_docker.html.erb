@@ -1,9 +1,7 @@
 <% javascript 'compute_resource', 'lookup_keys' %>
 <%= text_f f, :name if show_vm_name? %>
 <% new = @host.nil? || @host.try(:new_record?) %>
-<%= select_f f, :image, compute_resource.images, :uuid, :name, {},
-               {:help_inline => :indicator,
-               :label       => _('Image') } %>
+<%= selectable_f f, :image, Docker::Image.all.collect {|i| [i.info['RepoTags'].first, i.id]}, {}, {:help_inline => :indicator, :label => _('Image')} %>
 <%= f.hidden_field :template if !new %>
 
 <div class='compute_profile'>
