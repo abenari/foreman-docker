@@ -15,13 +15,30 @@ class ContainersControllerTest < ActionController::TestCase
     assert_template 'index'
   end
 
-  test 'deleting a container in compute resource redirects to containers index' do
-    Fog.mock!
-    container_resource = FactoryGirl.create(:docker_cr)
-    container          = container_resource.vms.first
-    container.class.any_instance.expects(:destroy).returns(true)
-    delete :destroy, { :compute_resource_id => container_resource,
-                       :id                  => container.id }, set_session_user
-    assert_redirected_to containers_path
+  context 'deletions' do
+    setup do
+      Fog.mock!
+      @container_resource = FactoryGirl.create(:docker_cr)
+    end
+
+    test 'unmanaged container redirects to containers index' do
+      container = @container_resource.vms.first
+      container.class.any_instance.expects(:destroy).returns(true)
+      delete :destroy, { :compute_resource_id => @container_resource,
+                         :id                  => container.id }, set_session_user
+      assert_redirected_to containers_path
+    end
+
+    test 'managed container redirects to containers index' do
+      managed_container = FactoryGirl.create(:container)
+      delete :destroy, { :id => managed_container.id }, set_session_user
+      assert_redirected_to containers_path
+    end
+
+    test 'managed container deletes container in docker' do
+      managed_container = FactoryGirl.create(:container)
+      ComputeResource.any_instance.expects(:destroy_vm).with(managed_container.uuid).returns(true)
+      delete :destroy, { :id => managed_container.id }, set_session_user
+    end
   end
 end
