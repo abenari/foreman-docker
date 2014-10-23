@@ -12,8 +12,7 @@ The gem name is "foreman_docker".
 
 RPM users can install the "ruby193-rubygem-foreman_docker" or "rubygem-foreman_docker" packages.
 
-After installation using bundle and before touching reboot.txt (restarting foreman) execute following command:
-
+After installing plugin and before restarting foreman run:
 `foreman-rake db:migrate`
 
 ## Compatibility
