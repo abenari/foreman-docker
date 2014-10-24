@@ -20,6 +20,7 @@ After installing plugin and before restarting foreman run:
 | Foreman Version | Plugin Version |
 | ---------------:| --------------:|
 | >=  1.5         | 0.0.1          |
+| >=  1.6         | 0.0.3          |
 
 ## Testing
 
