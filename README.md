@@ -4,7 +4,7 @@ This plugin enables provisioning and managing Docker containers and images from 
 
 ## Installation
 
-Please see the Foreman manual for generic plugin installation instructions:
+Please see the Foreman manual for plugin installation instructions:
 
 * [Foreman: How to Install a Plugin](http://theforeman.org/manuals/latest/index.html#6.1InstallaPlugin)
 
