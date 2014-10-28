@@ -1,10 +1,10 @@
 # Foreman Docker Plugin
 
-This plugin enables provisioning and managing Docker containers and images in Foreman.
+This plugin enables provisioning and managing Docker containers and images from Foreman.
 
 ## Installation
 
-Please see the Foreman manual for appropriate instructions:
+Please see the Foreman manual for plugin installation instructions:
 
 * [Foreman: How to Install a Plugin](http://theforeman.org/manuals/latest/index.html#6.1InstallaPlugin)
 
@@ -20,6 +20,8 @@ After installing plugin and before restarting foreman run:
 | Foreman Version | Plugin Version |
 | ---------------:| --------------:|
 | >=  1.5         | 0.0.1          |
+| >=  1.6         | 0.0.3          |
+| >=  1.7 (to be released) | 0.1.0 |
 
 ## Testing
 
