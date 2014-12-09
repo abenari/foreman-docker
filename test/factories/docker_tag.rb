@@ -1,6 +1,6 @@
 FactoryGirl.define do
   factory :docker_tag do
     sequence(:tag) { |n| "tag#{n}" }
-    association :image, :factory => :docker_image
+    association :repository, :factory => :docker_repository
   end
 end

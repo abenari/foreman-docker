@@ -19,11 +19,13 @@ module Containers
       when :preliminary
         @container.update_attribute(:compute_resource_id, params[:container][:compute_resource_id])
       when :image
-        image = update_or_create_image(params[:image][:image_id], params[:image][:registry_id])
+        repo = update_or_create_repo(params[:repository][:name], params[:repository][:registry_id])
+        tag = DockerTag.find_or_create_by_tag_and_docker_repository_id!(params[:container][:tag],
+                                                                        repo.id)
         @container.update_attributes!(
-            :image => image,
-            :tag => DockerTag.find_or_create_by_tag_and_docker_image_id!(params[:container][:tag],
-                                                                         image.id))
+            :repository => repo,
+            :tag => tag
+        )
       when :configuration
         @container.update_attributes(params[:container])
       when :environment
@@ -40,16 +42,9 @@ module Containers
 
     private
 
-    def update_or_create_image(id, registry_id)
-      image = DockerImage.find_or_create_by_image_id!(id)
-      begin
-        image.registries << DockerRegistry.find(registry_id) \
-          unless params[:image][:registry_id].empty?
-      # rubocop:disable Lint/HandleExceptions
-      rescue ActiveRecord::StatementInvalid
-        # ignore, someone else already added the image to the registry
-      end
-      image
+    def update_or_create_repo(name, registry_id)
+      registry_id = nil if registry_id.blank?
+      DockerRepository.find_or_create_by_name_and_docker_registry_id!(name, registry_id)
     end
 
     def finish_wizard_path

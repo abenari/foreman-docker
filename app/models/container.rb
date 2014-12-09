@@ -2,7 +2,7 @@ class Container < ActiveRecord::Base
   include Authorizable
 
   belongs_to :compute_resource
-  belongs_to :image, :class_name => 'DockerImage', :foreign_key => 'docker_image_id'
+  belongs_to :repository, :class_name => 'DockerRepository', :foreign_key => 'docker_repository_id'
   belongs_to :tag,   :class_name => 'DockerTag',   :foreign_key => 'docker_tag_id'
   has_many :environment_variables, :dependent  => :destroy, :foreign_key => :reference_id,
                                    :inverse_of => :container,
@@ -10,13 +10,13 @@ class Container < ActiveRecord::Base
   accepts_nested_attributes_for :environment_variables, :allow_destroy => true
   include ForemanDocker::ParameterValidators
 
-  attr_accessible :command, :image, :name, :compute_resource_id, :entrypoint,
+  attr_accessible :command, :repository, :name, :compute_resource_id, :entrypoint,
                   :cpu_set, :cpu_shares, :memory, :tty, :attach_stdin,
                   :attach_stdout, :attach_stderr, :tag, :uuid, :environment_variables_attributes
 
   def parametrize
     { 'name'  => name, # key has to be lower case to be picked up by the Docker API
-      'Image' => tag.tag.blank? ? image.image_id : "#{image.image_id}:#{tag.tag}",
+      'Image' => tag.tag.blank? ? repository.name : "#{repository.name}:#{tag.tag}",
       'Tty'          => tty,                    'Memory'       => memory,
       'Entrypoint'   => entrypoint.try(:split), 'Cmd'          => command.try(:split),
       'AttachStdout' => attach_stdout,          'AttachStdin'  => attach_stdin,

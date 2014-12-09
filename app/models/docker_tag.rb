@@ -1,8 +1,8 @@
 class DockerTag < ActiveRecord::Base
-  belongs_to :image, :class_name => 'DockerImage', :foreign_key => 'docker_image_id'
+  belongs_to :repository, :class_name => 'DockerRepository', :foreign_key => 'docker_repository_id'
 
-  attr_accessible :tag, :image
+  attr_accessible :tag, :repository
 
-  validates :tag,   :presence => true
-  validates :image, :presence => true
+  validates :tag, :presence => true, :uniqueness => { :scope => :docker_repository_id }
+  validates :repository, :presence => true
 end

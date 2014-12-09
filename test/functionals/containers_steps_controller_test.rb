@@ -6,24 +6,25 @@ module Containers
       @container = FactoryGirl.create(:container)
     end
 
-    test 'sets a docker image and tag for a new container' do
+    test 'sets a docker repo and tag for a new container' do
       put :update, { :id => :image,
-                     :image => { :docker_registry_id => '',
-                                 :image_id => 'centos' },
+                     :repository => { :docker_registry_id => '',
+                                      :name => 'centos' },
                      :container_id => @container.id,
                      :container => { :tag => 'latest' } }, set_session_user
       assert_response :found
       assert_redirected_to container_step_path(:container_id => @container.id,
                                                :id           => :configuration)
-      assert_equal DockerImage.find_by_image_id('centos'), @container.reload.image
+      assert_equal DockerRepository.find_by_name('centos'), @container.reload.repository
       assert_equal DockerTag.find_by_tag('latest'), @container.tag
     end
 
     context 'container creation' do
       setup do
-        @container.update_attribute(:image, (image = FactoryGirl.create(:docker_image,
-                                                                        :image_id => 'centos')))
-        @container.update_attribute(:tag, FactoryGirl.create(:docker_tag, :image => image,
+        repository = FactoryGirl.create(:docker_repository,
+                                        :name => 'centos')
+        @container.update_attribute(:repository, repository)
+        @container.update_attribute(:tag, FactoryGirl.create(:docker_tag, :repository => repository,
                                                                           :tag   => 'latest'))
       end
 
