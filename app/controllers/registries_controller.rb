@@ -39,9 +39,15 @@ class RegistriesController < ::ApplicationController
     end
   end
 
+  private
+
   def find_registry
     @registry = DockerRegistry.find(params[:id])
   rescue ActiveRecord::RecordNotFound
     not_found
+  end
+
+  def model_of_controller
+    DockerRegistry
   end
 end
