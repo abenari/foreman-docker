@@ -1,10 +1,10 @@
 # rubocop:disable Metrics/ClassLength
 class ContainersController < ::ApplicationController
-  before_filter :find_container, :only => [:show, :auto_complete_repository,
-                                           :auto_complete_repository_tags,
+  before_filter :find_container, :only => [:show, :auto_complete_repository_name,
+                                           :auto_complete_tag,
                                            :search_repository, :commit]
-  before_filter :find_registry, :only => [:auto_complete_repository,
-                                          :auto_complete_repository_tags,
+  before_filter :find_registry, :only => [:auto_complete_repository_name,
+                                          :auto_complete_tag,
                                           :search_repository]
 
   def index
@@ -38,7 +38,7 @@ class ContainersController < ::ApplicationController
   def show
   end
 
-  def auto_complete_repository
+  def auto_complete_repository_name
     exist = if @registry.nil?
               @container.compute_resource.exist?(params[:search])
             else
@@ -54,12 +54,12 @@ class ContainersController < ::ApplicationController
     result['results'].any? { |r| r['name'] == registry_name }
   end
 
-  def auto_complete_repository_tags
+  def auto_complete_tag
     # This is the format jQuery UI autocomplete expects
     tags = if @registry.nil?
              @container.compute_resource.tags(params[:search])
            else
-             registry_auto_complete_repository_tags(params[:search])
+             registry_auto_complete_tags(params[:search])
            end
     respond_to do |format|
       format.js do
@@ -69,7 +69,7 @@ class ContainersController < ::ApplicationController
     end
   end
 
-  def registry_auto_complete_repository_tags(term)
+  def registry_auto_complete_tags(term)
     ::Service::RegistryApi.new(:url => @registry.url).list_repository_tags(term).keys
   end
 
@@ -106,7 +106,7 @@ class ContainersController < ::ApplicationController
 
   def action_permission
     case params[:action]
-    when 'auto_complete_repository', 'auto_complete_repository_tags', 'search_repository'
+    when 'auto_complete_repository_name', 'auto_complete_tag', 'search_repository'
       :view
     when 'commit'
       :commit

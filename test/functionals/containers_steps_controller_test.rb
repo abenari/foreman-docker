@@ -7,25 +7,24 @@ module Containers
     end
 
     test 'sets a docker repo and tag for a new container' do
+      container_attrs = { :repository_name => 'centos',
+                          :tag => 'latest',
+                          :registry_id => ''
+      }
       put :update, { :id => :image,
-                     :repository => { :docker_registry_id => '',
-                                      :name => 'centos' },
                      :container_id => @container.id,
-                     :container => { :tag => 'latest' } }, set_session_user
+                     :container => container_attrs }, set_session_user
       assert_response :found
       assert_redirected_to container_step_path(:container_id => @container.id,
                                                :id           => :configuration)
-      assert_equal DockerRepository.find_by_name('centos'), @container.reload.repository
-      assert_equal DockerTag.find_by_tag('latest'), @container.tag
+      assert_equal "centos", @container.reload.repository_name
+      assert_equal "latest", @container.tag
     end
 
     context 'container creation' do
       setup do
-        repository = FactoryGirl.create(:docker_repository,
-                                        :name => 'centos')
-        @container.update_attribute(:repository, repository)
-        @container.update_attribute(:tag, FactoryGirl.create(:docker_tag, :repository => repository,
-                                                                          :tag   => 'latest'))
+        @container.update_attribute(:repository_name, "centos")
+        @container.update_attribute(:tag, "latest")
       end
 
       test 'uuid of the created container is saved at the end of the wizard' do

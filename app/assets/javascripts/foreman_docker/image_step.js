@@ -26,7 +26,7 @@ function autoCompleteRepo(item) {
   $.ajax({
     type:'get',
     url: $(item).attr('data-url'),
-    data: { search: item.val(), registry_id: $('#repository_registry_id').val() },
+    data: { search: item.val(), registry_id: $('#registry_id').val() },
     //data:'search=' + item.val(),
     success:function (result) {
       if(result == 'true'){

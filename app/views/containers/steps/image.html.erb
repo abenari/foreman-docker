@@ -26,9 +26,9 @@
             <div class="form-group col-md-6">
               <%= label_tag "repository[search]", _('Search'), :class=>"col-sm-2 control-label" %>
               <div class="input-group">
-                <%= auto_complete_docker_search('repository[name]', '',
-                                         :'data-url'  => auto_complete_repository_container_path(@container),
-                                         :value       => f.object.repository.present? ? f.object.repository.name : '',
+                <%= auto_complete_docker_search('container[repository_name]', '',
+                                         :'data-url'  => auto_complete_repository_name_container_path(@container),
+                                         :value       => f.object.repository_name.present? ? f.object.repository_name : '',
                                          :id          => :search,
                                          :focus_on_load => true,
                                          :placeholder => _('Find your favorite container, e.g: centos')) %>
@@ -45,9 +45,9 @@
               </div>
             </div>
             <%= text_f f, :tag,
-                          :value      => f.object.tag.present? ? f.object.tag.tag : '',
+                          :value      => f.object.tag.present? ? f.object.tag : '',
                           :id         => 'tag',
-                          :'data-url' => auto_complete_repository_tags_container_path(@container) %>
+                          :'data-url' => auto_complete_tag_container_path(@container) %>
             <div class="col-md-12">
               <div id='searching_spinner' class='col-md-offset-3 hide'>
                 <span id='waiting_text'>

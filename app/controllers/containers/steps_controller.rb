@@ -19,13 +19,7 @@ module Containers
       when :preliminary
         @container.update_attribute(:compute_resource_id, params[:container][:compute_resource_id])
       when :image
-        repo = update_or_create_repo(params[:repository][:name], params[:repository][:registry_id])
-        tag = DockerTag.find_or_create_by_tag_and_docker_repository_id!(params[:container][:tag],
-                                                                        repo.id)
-        @container.update_attributes!(
-            :repository => repo,
-            :tag => tag
-        )
+        @container.update_attributes!(params[:container])
       when :configuration
         @container.update_attributes(params[:container])
       when :environment
@@ -41,11 +35,6 @@ module Containers
     end
 
     private
-
-    def update_or_create_repo(name, registry_id)
-      registry_id = nil if registry_id.blank?
-      DockerRepository.find_or_create_by_name_and_docker_registry_id!(name, registry_id)
-    end
 
     def finish_wizard_path
       container_path(:id => params[:container_id])

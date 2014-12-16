@@ -2,8 +2,7 @@ class DockerRegistry < ActiveRecord::Base
   include Authorizable
   include Taxonomix
 
-  has_many :repositories, :class_name => 'DockerRepository', :foreign_key => 'docker_registry_id',
-    :dependent => :destroy
+  has_many :containers, :foreign_key => "registry_id", :dependent => :destroy
 
   scoped_search :on => :name, :complete_value => true
   scoped_search :on => :url
