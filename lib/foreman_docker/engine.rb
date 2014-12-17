@@ -64,7 +64,7 @@ module ForemanDocker
         end
 
         security_block :registries do
-          permission :view_registries,    :registries         => [:index, :show]
+          permission :view_registries,    :registries         => [:index, :show, :auto_complete_search]
           permission :create_registries,  :registries         => [:new, :create, :update, :edit]
           permission :destroy_registries, :registries         => [:destroy]
         end
