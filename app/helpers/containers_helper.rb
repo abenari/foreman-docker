@@ -1,6 +1,6 @@
 module ContainersHelper
   def managed_icon(container, resource)
-    icon_text(managed?(container, resource) ? 'check' : 'unchecked')
+    managed?(container, resource) ? _('Yes') :  _('No')
   end
 
   def managed?(container, resource)
