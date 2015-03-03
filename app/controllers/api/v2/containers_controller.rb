@@ -18,10 +18,11 @@ module Api
 
       def index
         if params[:compute_resource_id].present?
-          @containers = Container.where(:compute_resource_id => params[:compute_resource_id])
+          scope = Container.where(:compute_resource_id => params[:compute_resource_id])
         else
-          @containers = Container.all
+          scope = Container.scoped
         end
+        @containers = scope.search_for(params[:search], :order => params[:order]).paginate(:page => params[:page])
       end
 
       api :GET, '/containers/:id/', N_('Show a container')
@@ -41,10 +42,11 @@ module Api
           param :registry_id, :identifier, :desc => N_('Registry this container will have to use
                                                         to get the image')
           param :image, String, :desc => N_('Image to use to create the container.
-                                            Format should be repository:tag, e.g: centos:7')
+                                            Format should be repository:tag, e.g: centos:7'),
+                                :required => true
           param :tty, :bool
           param :entrypoint, String
-          param :cmd, String
+          param :command, String, :required => true
           param :memory, String
           param :cpu_shares, :number
           param :cpu_sets, String
@@ -52,7 +54,6 @@ module Api
           param :attach_stdout, :bool
           param :attach_stdin, :bool
           param :attach_stderr, :bool
-          param :katello, :bool
         end
       end
 
@@ -67,6 +68,9 @@ module Api
         process_response @container.save
       rescue ActiveModel::MassAssignmentSecurity::Error => e
         render :json => { :error  => _("Wrong attributes: %s") % e.message },
+               :status => :unprocessable_entity
+      rescue ForemanDocker::InvalidImageFormat => e
+        render :json => { :error  => _("Invalid Docker image format: %s") % params[:image] },
                :status => :unprocessable_entity
       end
 
@@ -125,18 +129,18 @@ module Api
 
       def set_wizard_state
         wizard_properties = { :preliminary   => [:compute_resource_id],
-                              :image         => [:registry_id, :repository_name, :tag, :katello],
+                              :image         => [:registry_id, :repository_name, :tag, :image],
                               :configuration => [:name, :command, :entrypoint, :cpu_set,
                                                  :cpu_shares, :memory],
                               :environment   => [:tty, :attach_stdin, :attach_stdout,
                                                  :attach_stderr] }
 
         wizard_state = DockerContainerWizardState.create
-        wizard_properties.each do |step, properties|
+        wizard_properties.each do |state, properties|
           property_values = properties.each_with_object({}) do |property, values|
             values[:"#{property}"] = params[:container][:"#{property}"]
           end
-          wizard_state.send(:"create_#{step}", property_values)
+          wizard_state.send(:"create_#{state}", property_values)
         end
 
         if params[:container][:environment_variables].present?

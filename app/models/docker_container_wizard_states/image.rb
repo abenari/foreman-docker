@@ -7,5 +7,14 @@ module DockerContainerWizardStates
 
     validates :tag,             :presence => true
     validates :repository_name, :presence => true
+
+    def image=(image)
+      if (data = image.match(/\A([a-z0-9_\/\-.]+)(?::([a-z0-9_\-.]+))?\z/))
+        self.repository_name = data[1]
+        self.tag = data[2] || "latest"
+      else
+        raise ForemanDocker::InvalidImageFormat
+      end
+    end
   end
 end
