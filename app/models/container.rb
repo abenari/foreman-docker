@@ -36,4 +36,9 @@ class Container < ActiveRecord::Base
   def in_fog
     @fog_container ||= compute_resource.vms.get(uuid)
   end
+
+  def test_method
+    User.where(:name => "jfkdlsjfdslkfjsldf dsfjkldsf jskl fjsdlkf sjlfkdsj fklsdfj jdslkfds")
+      .first
+  end
 end
