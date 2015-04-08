@@ -1,4 +1,3 @@
-<% title "#{@container.name.titleize} - #{@container.in_fog.name}" %>
 <%= stylesheet 'foreman_docker/terminal' %>
 <%= container_title_actions(@container) %>
 <div id="host-show" class="row">
@@ -6,10 +5,10 @@
    <div id="myTabContent" class="tab-content">
       <div class="tab-pane active in">
         <table id="properties_table" class="table table-bordered table-striped">
-          <tr><th colspan="2"><%= _('Properties') %></th></tr>
+          <tr><th colspan="2"><span class="glyphicon glyphicon-tasks"></span> <%= _('Properties') %></th></tr>
             <tr>
               <td><%= _('Name') %></td>
-              <td><%= @container.in_fog.name %></td>
+              <td><%= fog_property(@container) { @container.in_fog.name } %></td>
             </tr>
             <tr>
               <td><%= _('Image Repository') %></td>
@@ -21,40 +20,38 @@
             </tr>
             <tr>
               <td><%= _('IP Address') %></td>
-              <td><%= @container.in_fog.ipaddress %> </td>
+              <td><%= fog_property(@container) { @container.in_fog.ipaddress } %></td>
             </tr>
             <tr>
               <td><%= _('CPU shares') %></td>
-              <td><%= @container.in_fog.cores %></td>
+              <td><%= fog_property(@container) { @container.in_fog.cores } %></td>
             </tr>
             <tr>
               <td><%= _('UUID') %></td>
-              <td><%= trunc_with_tooltip @container.in_fog.identity %></td>
+              <td><%= fog_property(@container) { trunc_with_tooltip(@container.in_fog.identity) } %></td>
             </tr>
             <tr>
               <td><%= _('Memory') %></td>
-              <td><%= number_to_human_size @container.in_fog.memory %> </td>
+              <td>
+                <%= fog_property(@container) { number_to_human_size(@container.in_fog.memory) } %>
+              </td>
             </tr>
             <tr>
               <td><%= _('Command') %></td>
-              <td><%= @container.in_fog.command %> </td>
+              <td><%= fog_property(@container) { @container.in_fog.command }  %></td>
             </tr>
             <tr>
               <td><%= _('Exposed ports') %></td>
-              <td><%= @container.in_fog.exposed_ports %> </td>
+              <td><%= fog_property(@container) { @container.in_fog.exposed_ports } %></td>
             </tr>
             <tr>
               <td><%= _('Environment Variables') %></td>
               <td>
-                <table id="environment_variables" class="table table-bordered" style="table-layout:fixed; word-wrap: break-word">
-                  <% (@container.in_fog.attributes['config_env'] || []).each do |environment_variable| %>
-                  <% pair = environment_variable.split("=") %>
-                    <tr>
-                      <td><b><%= pair.first %></b></td>
-                      <td><i><%= pair.second %></i></td>
-                    </tr>
-                  <% end %>
-                </table>
+                <%=
+                  fog_property(@container) do
+                    pair_attributes_table(@container.in_fog.attributes['config_env'] || [])
+                  end
+                %>
               </td>
             </tr>
             <% Taxonomy.enabled_taxonomies.each do |taxonomy| %>
@@ -74,50 +71,60 @@
     </div>
   </div>
   <div class="col-md-8">
-    <% if @container.in_fog.ready? %>
-    <ul id="myTab" class="nav nav-tabs">
-      <li class="active"><a href="#processes" data-toggle="tab">
-        <span class="glyphicon glyphicon-credit-card"></span>
-        <%= _('Processes') %>
-      </a></li>
-      <li><a href="#logs" data-toggle="tab">
-        <span class="glyphicon glyphicon-list-alt"></span>
-        <%= _('Logs') %>
-      </a></li>
-    </ul>
-    <div id="myTabContent" class="tab-content">
-      <div class="tab-pane active in" id="processes">
-        <div class='accordion' id='accordion'>
-          <% processes(@container).each do |process| %>
-          <div>
-            <h2>
-              <a href='#<%= process['PID'] %>-index'
-               class='accordion-toggle'
-               data-toggle='collapse'
-               data-parent='#accordion'>
-               <%= process['CMD'] %>
-              </a><br>
-              <small><%= process['UID'] %></small>
-            </h2>
+    <% if @container.uuid.present? %>
+      <% if @container.in_fog.ready? %>
+        <ul id="myTab" class="nav nav-tabs">
+          <li class="active"><a href="#processes" data-toggle="tab">
+            <span class="glyphicon glyphicon-credit-card"></span>
+            <%= _('Processes') %>
+          </a></li>
+          <li><a href="#logs" data-toggle="tab">
+            <span class="glyphicon glyphicon-list-alt"></span>
+            <%= _('Logs') %>
+          </a></li>
+        </ul>
+        <div id="myTabContent" class="tab-content">
+          <div class="tab-pane active in" id="processes">
+            <% processes = Docker::Container.get(@container.uuid).top %>
+            <div class='accordion' id='accordion'>
+              <% processes(@container).each do |process| %>
+              <div>
+                <h2>
+                  <a href='#<%= process['PID'] %>-index'
+                   class='accordion-toggle'
+                   data-toggle='collapse'
+                   data-parent='#accordion'>
+                   <%= process['CMD'] %>
+                  </a><br>
+                  <small><%= process['UID'] %></small>
+                </h2>
+              </div>
+              <div id='<%= process['PID'] %>-index' class='collapse accordion-body'>
+                <pre class="prettyprint"><%= JSON.pretty_generate(process) %></pre>
+              </div>
+              <% end %>
+            </div>
           </div>
-          <div id='<%= process['PID'] %>-index' class='collapse accordion-body'>
-            <pre class="prettyprint"><%= JSON.pretty_generate(process) %></pre>
+          <div class="tab-pane" id="logs">
+            <pre class="terminal terminal-output pre-scrollable"><code>
+              <%= logs(@container, :stdout => true, :tail => 100) %>
+            </code></pre>
           </div>
-        <% end %>
         </div>
-      </div>
-      <div class="tab-pane" id="logs">
-        <pre class="terminal terminal-output pre-scrollable"><code>
-          <%= logs(@container, :stdout => true, :tail => 100) %>
-        </code></pre>
-      </div>
-    </div>
+      <% else %>
+        <div class="alert alert-block alert-warning">
+          <p><strong><%= _("Notice") %></strong>
+          <hr>
+          <%= _("Your container is stopped.") %></p>
+          <p><%= _("Please turn on your container to see processes running, logs, and more.") %></p>
+        </div>
+      <% end %>
     <% else %>
       <div class="alert alert-block alert-warning">
         <p><strong><%= _("Notice") %></strong>
         <hr>
-        <%= _("Your container is stopped.") %></p>
-        <p><%= _("Please turn on your container to see processes running, logs, and more.") %></p>
+        <%= _("Your container is being provisioned.") %></p>
+        <p><%= _("Please wait until your image is pulled to the Docker host. You can track progress at Monitor > Tasks.") %></p>
       </div>
     <% end %>
   </div>

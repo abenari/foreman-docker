@@ -20,4 +20,5 @@ Gem::Specification.new do |s|
 
   s.add_dependency 'docker-api', '1.17'
   s.add_dependency 'wicked', '~> 1.1'
+  s.add_dependency 'foreman-tasks', '~> 0.6.0'
 end

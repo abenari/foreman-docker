@@ -9,6 +9,10 @@ def assert_row_button(index_path, link_text, button_text, dropdown = false)
   end
 end
 
+require 'dynflow/testing'
+Mocha::Mock.send :include, Dynflow::Testing::Mimic
+Dynflow::Testing.logger_adapter.level = 1
+
 # Add plugin to FactoryGirl's paths
 FactoryGirl.definition_file_paths << File.join(File.dirname(__FILE__), 'factories')
 FactoryGirl.reload

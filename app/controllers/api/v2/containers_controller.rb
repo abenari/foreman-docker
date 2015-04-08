@@ -69,7 +69,7 @@ module Api
       param_group :container, :as => :create
 
       def create
-        @container = Service::Containers.new.start_container!(set_wizard_state)
+        @container = ForemanDocker::Service::Containers.new.start_container!(set_wizard_state)
         set_container_taxonomies
         process_response @container.save
       rescue ActiveModel::MassAssignmentSecurity::Error => e

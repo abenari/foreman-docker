@@ -52,7 +52,7 @@ class ImageSearchController < ::ApplicationController
   end
 
   def hub_image_exists?(terms)
-    @compute_resource.exist?(terms)
+    ::Docker::Image.exist?(terms)
   end
 
   def hub_auto_complete_image_tags(terms)
@@ -79,10 +79,9 @@ class ImageSearchController < ::ApplicationController
   end
 
   def registry_search_image(terms)
-    r = ::Service::RegistryApi.new(:url => @registry.url,
-                                   :user => @registry.username,
-                                   :password => @registry.password).search(terms)
-    r['results']
+    ::Service::RegistryApi.new(:url => @registry.url,
+                               :user => @registry.username,
+                               :password => @registry.password).search(terms)['results']
   end
 
   def action_permission

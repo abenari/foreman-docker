@@ -4,6 +4,7 @@ require 'fog'
 require 'fog/fogdocker'
 require 'wicked'
 require 'docker'
+require 'foreman-tasks'
 
 module ForemanDocker
   # Inherit from the Rails module of the parent app (Foreman), not the plugin.
@@ -13,6 +14,10 @@ module ForemanDocker
 
     config.autoload_paths += Dir["#{config.root}/app/controllers/concerns"]
     config.autoload_paths += Dir["#{config.root}/app/models/concerns"]
+
+    initializer "foreman_docker.require_dynflow", :before => "foreman_tasks.initialize_dynflow" do
+      ::ForemanTasks.dynflow.require!
+    end
 
     initializer 'foreman_docker.load_app_instance_data' do |app|
       app.config.paths['db/migrate'] += ForemanDocker::Engine.paths['db/migrate'].existent

@@ -27,22 +27,28 @@ module ContainersHelper
     end
   end
 
+  def container_title(container)
+    title  = container.name.titleize
+    title += if container.uuid.present?
+               "- #{container.in_fog.name}"
+             else
+               _(" - provisioning ") + image_tag('spinner.gif')
+             end
+    title(container.name.titleize, title.html_safe)
+  end
+
   def container_title_actions(container)
     @compute_resource = container.compute_resource
+    container_title(container)
     title_actions(
-        button_group(
-          link_to(_('Commit'), '#commit-modal', :'data-toggle' => 'modal')
-        ),
-        button_group(container_power_action(container.in_fog)),
-        button_group(
-          display_delete_if_authorized(
-            hash_for_container_path(:id => container.id)
-                                    .merge(:auth_object => container,
-                                           :auth_action => 'destroy',
-                                           :authorizer  => authorizer),
-            :confirm     => _("Delete %s?") % container.name)
-        )
-    )
+      button_group(link_to(_('Commit'), '#commit-modal', :'data-toggle' => 'modal')),
+      button_group(container_power_action(container.in_fog)),
+      button_group(display_delete_if_authorized(
+        hash_for_container_path(:id => container.id).merge(:auth_object => container,
+                                                           :auth_action => 'destroy',
+                                                           :authorizer  => authorizer),
+        :confirm => _("Delete %s?") % container.name))
+    ) if container.uuid.present?
   end
 
   def container_power_action(vm, authorizer = nil)
@@ -98,5 +104,21 @@ module ContainersHelper
 
   def logs(container, opts = {})
     ForemanDocker::Docker.get_container(container).logs(opts)
+  end
+
+  def fog_property(container)
+    return 'Not available' unless container.uuid.present?
+    yield
+  end
+
+  def pair_attributes_table(attributes)
+    table = "<table id='environment_variables' class='table table-bordered'
+                    style='table-layout:fixed; word-wrap: break-word'>"
+    attributes.each do |pair|
+      pair = pair.split("=")
+      table += "<tr><td><b> #{pair.first} </b></td><td><i> #{pair.second} </i></td></tr>"
+    end
+    table += '</table>'
+    table.html_safe
   end
 end

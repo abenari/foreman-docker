@@ -8,8 +8,8 @@ module Containers
 
     test 'wizard finishes with a redirect to the managed container' do
       state = DockerContainerWizardState.create!
-      Service::Containers.any_instance.expects(:start_container!).with(equals(state))
-        .returns(@container)
+      ForemanDocker::Service::Containers.any_instance.expects(:start_container!)
+        .with(equals(state)).returns(@container)
       put :update, { :wizard_state_id => state.id,
                      :id => :environment,
                      :docker_container_wizard_states_environment => { :tty => false } },

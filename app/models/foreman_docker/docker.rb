@@ -57,7 +57,7 @@ module ForemanDocker
     end
 
     def tags(image_name)
-      if exist?(image_name)
+      if ::Docker::Image.exist?(image_name)
         tags_for_local_image(local_images(image_name).first)
       else
         # If image is not found in the compute resource, get the tags from the Hub
@@ -77,7 +77,7 @@ module ForemanDocker
     end
 
     def create_container(args = {})
-      options = vm_instance_defaults.merge(args)
+      options = vm_instance_defaults.merge(args) { |_, default, new| new.empty? ? default : new }
       logger.debug("Creating container with the following options: #{options.inspect}")
       docker_command do
         ::Docker::Container.create(options, docker_connection)
@@ -85,6 +85,7 @@ module ForemanDocker
     end
 
     def create_image(args = {})
+      return true if ::Docker::Image.exist?(args[:fromImage])
       logger.debug("Creating docker image with the following options: #{args.inspect}")
       docker_command do
         ::Docker::Image.create(args, credentials, docker_connection)
@@ -92,8 +93,7 @@ module ForemanDocker
     end
 
     def vm_instance_defaults
-      ActiveSupport::HashWithIndifferentAccess.new('name' => "foreman_#{Time.now.to_i}",
-                                                   'Cmd' => ['/bin/bash'])
+      { 'name' => "foreman_#{Time.now.to_i}", 'Cmd' => ['/bin/bash'] }
     end
 
     def console(uuid)

@@ -43,7 +43,7 @@ module Containers
 
     def create_container
       @state.send(:"create_#{step}", params[:"docker_container_wizard_states_#{step}"])
-      container = (service = Service::Containers.new).start_container!(@state)
+      container = (service = ForemanDocker::Service::Containers.new).start_container!(@state)
       if container.present?
         process_success(:object => container, :success_redirect => container_path(container))
       else

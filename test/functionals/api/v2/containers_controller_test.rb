@@ -73,24 +73,23 @@ module Api
           repository_name = "centos"
           tag = "7"
           name = "foo"
-          registry_uri = URI.parse(@registry.url)
-          Service::Containers.any_instance.expects(:pull_image).returns(true)
-          Service::Containers.any_instance
-            .expects(:start_container).returns(true).with do |container|
-            container.must_be_kind_of(Container)
-            container.repository_name.must_equal(repository_name)
-            container.tag.must_equal(tag)
-            container.compute_resource_id.must_equal(@compute_resource.id)
-            container.name.must_equal(name)
-            container.repository_pull_url.must_include(registry_uri.host)
-            container.repository_pull_url.must_include("#{repository_name}:#{tag}")
+          container_mock = mock('container')
+          container_mock.expects(:save).returns(true)
+          ForemanDocker::Service::Containers.any_instance
+            .expects(:start_container!).returns(container_mock).with do |wizard_state|
+            wizard_state.must_be_kind_of(DockerContainerWizardState)
+            container_attributes = wizard_state.container_attributes
+            container_attributes[:repository_name].must_equal(repository_name)
+            container_attributes[:tag].must_equal(tag)
+            container_attributes[:compute_resource_id].must_equal(@compute_resource.id)
+            container_attributes[:name].must_equal(name)
           end
           post :create, :container => { :compute_resource_id => @compute_resource.id,
                                         :name => name,
                                         :registry_id => @registry.id,
                                         :repository_name => repository_name,
                                         :tag => tag }
-          assert_response :created
+          assert_response :success
         end
 
         test 'creates a katello container with correct params' do
@@ -102,7 +101,7 @@ module Api
           tag = "7"
           name = "foo"
           capsule_id = "10000"
-          Service::Containers.any_instance.expects(:start_container!)
+          ForemanDocker::Service::Containers.any_instance.expects(:start_container!)
             .returns(@container).with do |wizard_state|
             wizard_state.must_be_kind_of(DockerContainerWizardState)
             container_attributes = wizard_state.container_attributes
@@ -117,7 +116,7 @@ module Api
                                         :capsule_id => capsule_id,
                                         :repository_name => repository_name,
                                         :tag => tag }
-          assert_response :created
+          assert_response :success
         end
       end
     end

@@ -27,7 +27,7 @@ module FogExtensions
       end
 
       def poweroff
-        service.vm_action(:id => id, :action => :kill)
+        service.container_action(:id => id, :action => :kill)
       end
 
       def reset

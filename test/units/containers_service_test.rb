@@ -12,14 +12,10 @@ class ContainersServiceTest <  ActiveSupport::TestCase
     end
   end
 
-  test 'removes current state after successful container creation' do
-    ret = OpenStruct.new(:id => 1)
-    ForemanDocker::Docker.any_instance.expects(:create_image).returns(ret).with do |subject|
-      subject.must_equal(:fromImage => "test:test")
-    end
-    ForemanDocker::Docker.any_instance.expects(:create_container)
-      .returns(OpenStruct.new(:uuid => 1))
-    Service::Containers.new.start_container!(@state)
+  test 'removes current state after container creation task is scheduled' do
+    ForemanTasks.expects(:async_task).returns(true)
+    assert_equal DockerContainerWizardState.where(:id => @state.id).count, 1
+    ForemanDocker::Service::Containers.new.start_container!(@state)
     assert_equal DockerContainerWizardState.where(:id => @state.id).count, 0
   end
 end
