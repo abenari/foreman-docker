@@ -63,6 +63,7 @@ class Container < ActiveRecord::Base
   private
 
   def parse_memory(mem)
+    return 0 if mem.nil?
     mem.gsub!(/\s/, '')
     return mem.to_i if mem[/^\d*$/] # Return if size is without unit
     size, unit = mem.match(/^(\d+)([a-zA-Z])$/)[1, 2]
