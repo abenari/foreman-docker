@@ -45,8 +45,7 @@ module Service
 
       fail ActiveRecord::Rollback unless pull_image(container) && start_container(container)
 
-      container.name = container.in_fog.name[1..-1] if container.name.nil? ||
-                                                       container.name.length == 0
+      container.name = container.in_fog.name[1..-1] unless container.name.present?
 
       container
     end
