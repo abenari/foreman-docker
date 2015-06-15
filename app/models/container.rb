@@ -40,7 +40,7 @@ class Container < ActiveRecord::Base
   def parametrize
     { 'name'  => name, # key has to be lower case to be picked up by the Docker API
       'Image' => repository_pull_url,
-      'Tty'          => tty,                    'Memory'       => parse_memory(memory),
+      'Tty'          => tty,                    'Memory'       => ::Service::Utilities.parse_memory(memory),
       'Entrypoint'   => entrypoint.try(:split), 'Cmd'          => command.try(:split),
       'AttachStdout' => attach_stdout,          'AttachStdin'  => attach_stdin,
       'AttachStderr' => attach_stderr,          'CpuShares'    => cpu_shares,
@@ -58,24 +58,5 @@ class Container < ActiveRecord::Base
 
   def self.humanize_class_name(_name = nil)
     _("Docker/Container")
-  end
-
-  private
-
-  def parse_memory(mem)
-    return 0 if mem.nil?
-    mem.gsub!(/\s/, '')
-    return mem.to_i if mem[/^\d*$/] # Return if size is without unit
-    size, unit = mem.match(/^(\d+)([a-zA-Z])$/)[1, 2]
-    case unit.downcase
-    when 'g'
-      size.to_i * 1024 * 1024 * 1024
-    when 'm'
-      size.to_i * 1024 * 1024
-    when 'k'
-      size.to_i * 1024
-    else
-      fail "Unknown size unit '#{unit}'"
-    end
   end
 end

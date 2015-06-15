@@ -1,0 +1,28 @@
+require 'test_plugin_helper'
+
+class UtilitiesServiceTest < ActiveSupport::TestCase
+  test "parses empty and nil input as 0" do
+    assert_equal Service::Utilities.parse_memory(""), 0
+    assert_equal Service::Utilities.parse_memory(nil), 0
+    assert_equal Service::Utilities.parse_memory("        "), 0
+  end
+
+  test "correctly parses a number without unit" do
+    assert_equal Service::Utilities.parse_memory("1234"), 1234
+    assert_equal Service::Utilities.parse_memory("  123 4     "), 1234
+  end
+
+  test "correctl parses number with unit" do
+    assert_equal Service::Utilities.parse_memory("10K"), 10240
+    assert_equal Service::Utilities.parse_memory("20k"), 20480
+    assert_equal Service::Utilities.parse_memory("5 G"), 5368709120
+    assert_equal Service::Utilities.parse_memory("10m"), 10485760
+  end
+
+  test "raises on bad input" do
+    assert_raise RuntimeError do
+      Service::Utilities.parse_memory("26V")
+    end
+  end
+
+end
