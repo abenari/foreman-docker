@@ -8,15 +8,15 @@ class UtilitiesServiceTest < ActiveSupport::TestCase
   end
 
   test "correctly parses a number without unit" do
-    assert_equal Service::Utilities.parse_memory("1234"), 1234
-    assert_equal Service::Utilities.parse_memory("  123 4     "), 1234
+    assert_equal Service::Utilities.parse_memory("1234"), 1_234
+    assert_equal Service::Utilities.parse_memory("  123 4     "), 1_234
   end
 
   test "correctl parses number with unit" do
-    assert_equal Service::Utilities.parse_memory("10K"), 10240
-    assert_equal Service::Utilities.parse_memory("20k"), 20480
-    assert_equal Service::Utilities.parse_memory("5 G"), 5368709120
-    assert_equal Service::Utilities.parse_memory("10m"), 10485760
+    assert_equal Service::Utilities.parse_memory("10K"), 10_240
+    assert_equal Service::Utilities.parse_memory("20k"), 20_480
+    assert_equal Service::Utilities.parse_memory("5 G"), 5_368_709_120
+    assert_equal Service::Utilities.parse_memory("10m"), 10_485_760
   end
 
   test "raises on bad input" do
@@ -24,5 +24,4 @@ class UtilitiesServiceTest < ActiveSupport::TestCase
       Service::Utilities.parse_memory("26V")
     end
   end
-
 end
