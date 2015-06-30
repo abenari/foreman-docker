@@ -41,7 +41,7 @@ class Container < ActiveRecord::Base
     { 'name'  => name, # key has to be lower case to be picked up by the Docker API
       'Image' => repository_pull_url,
       'Tty'          => tty,
-      'Memory'       => ::Service::Utilities.parse_memory(memory),
+      'Memory'       => ::ForemanDocker::Utility.parse_memory(memory),
       'Entrypoint'   => entrypoint.try(:split), 'Cmd'          => command.try(:split),
       'AttachStdout' => attach_stdout,          'AttachStdin'  => attach_stdin,
       'AttachStderr' => attach_stderr,          'CpuShares'    => cpu_shares,

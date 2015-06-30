@@ -1,5 +1,5 @@
-module Service
-  class Utilities
+module ForemanDocker
+  module Utility
     def self.parse_memory(mem)
       return 0 unless mem.present?
       mem.gsub!(/\s/, '')
