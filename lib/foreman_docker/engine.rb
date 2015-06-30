@@ -128,6 +128,8 @@ module ForemanDocker
       load "#{ForemanDocker::Engine.root}/lib/foreman_docker/tasks/test.rake"
     end
 
+    require "foreman_docker/permitted_attributes"
+
     require 'fog/fogdocker/models/compute/server'
     require 'fog/fogdocker/models/compute/image'
     require 'fog/fogdocker/models/compute/images'
