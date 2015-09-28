@@ -64,7 +64,7 @@ module ContainersHelper
              { :class => "btn btn-info" }
            end
 
-    display_link_if_authorized "Power #{action_string(vm)}", opts, html.merge(:method => :put)
+    display_link_if_authorized _("Power %{act}") % {:act => action_string(vm)} , opts, html.merge(:method => :put)
   end
 
   def power_on_off_message(vm)

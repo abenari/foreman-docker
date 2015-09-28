@@ -6,7 +6,7 @@ class ContainersController < ::ApplicationController
   def index
     @container_resources = allowed_resources
     if @container_resources.empty?
-      warning('You need a Compute Resource of type Docker to start managing containers')
+      warning(_('You need a Compute Resource of type Docker to start managing containers.'))
       redirect_to new_compute_resource_path
     end
   # This should only rescue Fog::Errors, but Fog returns all kinds of errors...
@@ -41,7 +41,7 @@ class ContainersController < ::ApplicationController
                                                            :comment => params[:commit][:comment])
 
     process_success :success_redirect => :back,
-                    :success_msg      => _("%{container} commit was successful") %
+                    :success_msg      => _("%{container} commit was successful.") %
                       { :container => @container }
   rescue => e
     process_error :redirect => :back, :error_msg => _("Failed to commit %{container}: %{e}") %

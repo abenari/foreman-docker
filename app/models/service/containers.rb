@@ -98,7 +98,7 @@ module Service
 
     def run_container(container)
       docker_container = container.compute_resource.find_vm_by_uuid(container.uuid)
-      error(_('Could not start container')) unless docker_container.send(:start)
+      error(_('Could not start container.')) unless docker_container.send(:start)
     end
   end
 end
