@@ -1,18 +1,19 @@
 class ImageSearchController < ::ApplicationController
   before_filter :find_resource
+  before_filter :sanitize_search_term
 
   def auto_complete_repository_name
     catch_network_errors do
-      render :text => (use_hub? ? hub_image_exists?(params[:search]) :
-          registry_image_exists?(params[:search])).to_s
+      render :text => (use_hub? ? hub_image_exists?(@search_term) :
+          registry_image_exists?(@search_term)).to_s
     end
   end
 
   def auto_complete_image_tag
     catch_network_errors do
       # This is the format jQuery UI autocomplete expects
-      tags = use_hub? ? hub_auto_complete_image_tags(params[:search]) :
-          registry_auto_complete_image_tags(params[:search])
+      tags = use_hub? ? hub_auto_complete_image_tags(@search_term) :
+          registry_auto_complete_image_tags(@search_term)
       respond_to do |format|
         format.js do
           tags.map! { |tag| { :label => CGI.escapeHTML(tag), :value => CGI.escapeHTML(tag) } }
@@ -24,8 +25,8 @@ class ImageSearchController < ::ApplicationController
 
   def search_repository
     catch_network_errors do
-      repositories = use_hub? ? hub_search_image(params[:search]) :
-                                registry_search_image(params[:search])
+      repositories = use_hub? ? hub_search_image(@search_term) :
+                                registry_search_image(@search_term)
       respond_to do |format|
         format.js do
           render :partial => 'repository_search_results',
@@ -110,5 +111,9 @@ class ImageSearchController < ::ApplicationController
     end
   rescue ActiveRecord::RecordNotFound
     not_found
+  end
+
+  def sanitize_search_term
+    @search_term = params[:search].gsub(/\/$/, '')
   end
 end
