@@ -14,11 +14,13 @@ module ForemanDocker
     config.autoload_paths += Dir["#{config.root}/app/models/concerns"]
 
     initializer 'foreman_docker.load_app_instance_data' do |app|
-      app.config.paths['db/migrate'] += ForemanDocker::Engine.paths['db/migrate'].existent
+      ForemanDocker::Engine.paths['db/migrate'].existent.each do |path|
+        app.config.paths['db/migrate'] << path
+      end
     end
 
     initializer "foreman_docker.assets.precompile" do |app|
-      app.config.assets.precompile += %w(foreman_docker/autocomplete.css
+      app.config.assets.precompile << %w(foreman_docker/autocomplete.css
                                          foreman_docker/terminal.css
                                          foreman_docker/image_step.js)
     end
@@ -125,6 +127,8 @@ module ForemanDocker
     rake_tasks do
       load "#{ForemanDocker::Engine.root}/lib/foreman_docker/tasks/test.rake"
     end
+
+    require "foreman_docker/permitted_attributes"
 
     require 'fog/fogdocker/models/compute/server'
     require 'fog/fogdocker/models/compute/image'
