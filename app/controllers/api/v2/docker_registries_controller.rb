@@ -1,6 +1,6 @@
 module Api
   module V2
-    class RegistriesController < ::Api::V2::BaseController
+    class DockerRegistriesController < ::Api::V2::BaseController
       before_filter :find_resource, :except => %w(index create)
 
       resource_description do

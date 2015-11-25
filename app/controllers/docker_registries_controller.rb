@@ -1,4 +1,4 @@
-class RegistriesController < ::ApplicationController
+class DockerRegistriesController < ::ApplicationController
   include Foreman::Controller::AutoCompleteSearch
   before_filter :find_registry, :only => [:edit, :update, :destroy]
 
