@@ -434,4 +434,3 @@ msgstr ""
 #: ../foreman-docker/lib/foreman_docker/engine.rb:48
 msgid "All containers"
 msgstr ""
-

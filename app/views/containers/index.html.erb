@@ -8,9 +8,9 @@
 <ul class="nav nav-tabs" data-tabs="tabs">
   <% @container_resources.each_with_index do |resource, i| %>
     <% if i == 0 %>
-      <li class="active"><a href="#<%= "primary" %>" data-toggle="tab"><%= _("#{resource.name}") %></a></li>
+      <li class="active"><a href="#<%= "primary" %>" data-toggle="tab"><%= "#{resource.name}" %></a></li>
     <% else %>
-      <li><a href="#<%= resource.name %>" data-toggle="tab"><%= _("#{resource.name}") %></a></li>
+      <li><a href="#<%= resource.name %>" data-toggle="tab"><%= "#{resource.name}" %></a></li>
     <% end %>
   <% end %>
 </ul>
@@ -27,7 +27,7 @@
                  :resource           => resource %>
     <% else %>
       <div class="alert alert-warning">
-        <%= (_("Error connecting with the compute resource: <strong> %s </strong>") % resource.errors.messages[:base]).html_safe %>
+        <%= (_("Error connecting with the compute resource: <strong>%s</strong>") % resource.errors.messages[:base]).html_safe %>
       </div>
     <% end %>
     </div>
