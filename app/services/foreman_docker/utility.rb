@@ -13,7 +13,7 @@ module ForemanDocker
       when 'k'
         size.to_i * 1024
       else
-        fail "Unknown size unit '#{unit}'"
+        fail _("Unknown size unit '%{unit}'") % {:unit => unit}
       end
     end
   end
