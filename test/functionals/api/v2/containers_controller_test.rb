@@ -41,6 +41,7 @@ module Api
         end
 
         test 'delete removes a container in foreman and in Docker host' do
+          ComputeResource.any_instance.stubs(:destroy_vm).returns(true)
           delete :destroy, :id => @container.id
           assert_response :success
           assert_equal ActiveSupport::JSON.decode(response.body)['name'], 'foo'

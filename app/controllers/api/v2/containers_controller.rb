@@ -2,6 +2,8 @@
 module Api
   module V2
     class ContainersController < ::Api::V2::BaseController
+      include ForemanDocker::FindContainer
+      include ForemanDocker::ContainerDeletion
       before_filter :find_resource, :except => %w(index create)
 
       resource_description do
@@ -92,7 +94,7 @@ module Api
       param :compute_resource_id, :identifier
 
       def destroy
-        process_response @container.destroy
+        process_response container_deletion
       end
 
       api :GET, '/containers/:id/logs', N_('Show container logs')
