@@ -10,5 +10,5 @@ Deface::Override.new(
   :virtual_path => 'compute_resources/show',
   :name => 'remove_compute_profiles_tab',
   :replace => 'a[href="#compute_profiles"]',
-  :text => "<%= link_to(_('Compute profiles'), '#compute_profiles', :'data-toggle' => 'tab') unless @compute_resource.type == 'ForemanDocker::Docker' %>"
+  :text => "<%= link_to(_('Compute profiles'), '#compute_profiles', :'data-toggle' => 'tab', :'style' => \"\#{@compute_resource.type == 'ForemanDocker::Docker' ? 'display: none;' : ''}\") %>"
 )
