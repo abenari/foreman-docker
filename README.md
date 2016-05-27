@@ -78,6 +78,9 @@ Choose the **Docker provider**, and fill in all the fields. User name, password,
 
 That's it. You're now ready to create and manage containers in your new Docker compute resource.
 
+After installing plugin and before restarting foreman run:
+`foreman-rake db:migrate`
+
 ## Compatibility
 
 | Foreman | Plugin |
