@@ -117,6 +117,16 @@ module ForemanDocker
       ::Docker.authenticate!(credentials, docker_connection)
     end
 
+    def console(uuid)
+      test_connection
+      container = ::Docker::Container.get(uuid)
+      {
+        :name       => container.info['Name'],
+        'timestamp' => Time.now.utc,
+        'output'    => container.logs(:stdout => true, :tail => 100)
+      }
+    end
+
     def test_connection(options = {})
       super
       api_version
