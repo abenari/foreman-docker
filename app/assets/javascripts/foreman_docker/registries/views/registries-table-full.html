@@ -1,0 +1,22 @@
+<table class="table table-striped" ng-class="{'table-mask': table.working}">
+  <thead>
+    <tr bst-table-head row-select>
+      <th bst-table-column="name" sortable><span translate>Name</span></th>
+      <th bst-table-column="url"><span translate>URL</span></th>
+      <th bst-table-column="description"><span translate>Description</span></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <tr bst-table-row ng-repeat="registry in table.rows" row-select="registry">
+      <td bst-table-cell>
+        <a ui-sref="registries.details.info({registryId: registry.id})">
+          {{ registry.name }}
+        </a>
+        <i class="fa fa-chevron-right selected-icon" ng-show="registry.selected"></i>
+      </td>
+      <td bst-table-cell>{{ registry.url }}</td>
+      <td bst-table-cell>{{ registry.description }}</td>
+    </tr>
+  </tbody>
+</table>

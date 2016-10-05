@@ -1,0 +1,24 @@
+<span page-title>{{ 'Registries' | translate }}</span>
+
+<div data-extend-template="layouts/nutupane.html">
+
+  <div data-block="header">
+    {{ 'Registries' | translate }}
+  </div>
+
+  <div data-block="messages">
+    <div bst-alerts success-messages="successMessages" error-messages="errorMessages"></div>
+  </div>
+
+  <div data-block="actions">
+    <button class="btn btn-primary" bst-feature-flag="custom_registries" ui-sref="registries.new" ng-hide="denied('create_registries')">
+      <i class="fa fa-plus"></i>
+      {{ "New Registry" | translate }}
+    </button>
+  </div>
+
+  <span data-block="no-rows-message" translate>
+    You currently don't have any Registries<span bst-feature-flag="custom_registries">, you can add Registries using the button on the right</span>.
+  </span>
+
+</div>

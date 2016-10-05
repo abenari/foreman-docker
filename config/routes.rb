@@ -18,8 +18,6 @@ Rails.application.routes.draw do
     end
   end
 
-  resources :registries, :except => [:show]
-
   scope path: '/docker', as: :foreman_docker do
     namespace :api, :defaults => { :format => 'json' } do
       scope "(:apiv)", :module => :v2, :defaults => { :apiv => 'v2' }, :apiv => /v2/,

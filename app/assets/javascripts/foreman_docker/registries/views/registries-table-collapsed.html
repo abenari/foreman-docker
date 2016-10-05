@@ -1,0 +1,20 @@
+<table class="table table-striped" ng-class="{'table-mask': table.working}">
+  <thead>
+    <tr bst-table-head row-select>
+      <th bst-table-column sortable><span translate>Name</span></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <tr bst-table-row
+        ng-repeat="registry in table.rows"
+        row-select="registry"
+        active-row="stateIncludes('registries.details', {registryId: registry.id})">
+      <td bst-table-cell>
+        <a ui-sref="registries.details.info({registryId: registry.id})">
+          {{ registry.name }}
+        </a>
+      </td>
+    </tr>
+  </tbody>
+</table>

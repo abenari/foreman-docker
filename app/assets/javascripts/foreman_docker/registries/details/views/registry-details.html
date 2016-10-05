@@ -1,0 +1,46 @@
+<span page-title ng-model="registry">{{ 'Registry:' | translate }} {{ registry.name }}</span>
+
+<div class="loading-mask loading-mask-panel fa-3x" ng-show="panel.loading">
+  <i class="fa fa-spinner fa-spin"></i>
+  {{ "Loading..." | translate }}
+</div>
+
+<section class="nutupane-details" ng-cloak bst-container-scroll>
+
+  <header class="details-header">
+    <h2 class="pull-left" translate>Registry: {{ registry.name }}</h2>
+
+    <div class="details-actions pull-right">
+      <button class="btn btn-default"
+              ng-click="openModal()" ng-hide="denied('destroy_registries', registry)" translate>
+        Remove
+      </button>
+
+      <button class="btn btn-default" ui-sref="registries.index">
+        <i class="fa fa-remove"></i>
+        {{ "Close" | translate }}
+      </button>
+
+      <div bst-modal="removeRegistry(registry)">
+        <div data-block="modal-header" translate>Remove Registry "{{ registry.name }}"?</div>
+        <div data-block="modal-body" translate>Are you sure you want to remove Registry "{{ registry.name }}"?</div>
+      </div>
+    </div>
+  </header>
+
+  <nav>
+    <ul class="nav nav-tabs">
+      <li ng-class="{active: isState('registries.details.info')}">
+        <a ui-sref="registries.details.info">
+          <span translate>
+            Details
+          </span>
+        </a>
+      </li>
+    </ul>
+  </nav>
+
+  <div bst-alerts success-messages="successMessages" error-messages="errorMessages"></div>
+
+  <section class="nutupane-sub-section" ui-view></section>
+</section>

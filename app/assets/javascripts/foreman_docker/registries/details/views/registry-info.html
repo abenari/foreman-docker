@@ -1,0 +1,52 @@
+<span page-title ng-model="registry">{{ 'Details for Registry:' | translate }} {{ registry.name }}</span>
+
+<section>
+  <div class="details pull-left">
+    <section>
+      <div class="detail">
+        <span class="info-label" translate>Name</span>
+        <span class="info-value"
+              bst-edit-text="registry.name"
+              readonly="denied('edit_registries', registry)"
+              on-save="save(registry)">
+        </span>
+      </div>
+
+      <div class="detail">
+        <span class="info-label" translate>URL</span>
+        <span class="info-value"
+              bst-edit-textarea="registry.url"
+              readonly="denied('edit_registries', registry)"
+              on-save="save(registry)">
+        </span>
+      </div>
+
+      <div class="detail">
+        <span class="info-label" translate>Description</span>
+        <span class="info-value"
+              bst-edit-textarea="registry.description"
+              readonly="denied('edit_registries', registry)"
+              on-save="save(registry)">
+        </span>
+      </div>
+
+      <div class="detail">
+        <span class="info-label" translate>User Name</span>
+        <span class="info-value"
+              bst-edit-textarea="registry.username"
+              readonly="denied('edit_registries', registry)"
+              on-save="save(registry)">
+        </span>
+      </div>
+
+      <div class="detail">
+        <span class="info-label" translate>Password</span>
+        <span class="info-value"
+              bst-edit-textarea="registry.password"
+              readonly="denied('edit_registries', registry)"
+              on-save="save(registry)">
+        </span>
+      </div>
+    </section>
+  </div>
+</section>
