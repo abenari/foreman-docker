@@ -1,0 +1,74 @@
+<span page-title>{{ 'New Registry' | translate }}</span>
+
+<div class="loading-mask loading-mask-panel fa-3x" ng-show="panel.loading">
+  <i class="fa fa-spinner fa-spin"></i>
+  {{ "Loading..." | translate }}
+</div>
+
+<section class="nutupane-details" ng-cloak bst-container-scroll>
+  <header class="new-header details-header">
+    <h2 class="pull-left" translate>New Registry</h2>
+
+    <div class="details-actions pull-right">
+      <button class="btn btn-default" ui-sref="registries.index">
+        <i class="fa fa-remove"></i>
+        {{ "Close" | translate }}
+      </button>
+    </div>
+  </header>
+
+  <form name="registryForm" class="form-horizontal" novalidate role="form">
+
+    <div bst-form-group label="{{ 'Name' | translate }}">
+      <input id="name"
+             name="name"
+             ng-model="registry.name"
+             type="text"
+             tabindex="1"
+             autofocus
+             required/>
+    </div>
+
+    <div bst-form-group label="{{ 'URL' | translate }}">
+      <input id="url"
+             name="url"
+             ng-model="registry.url"
+             type="text"
+             tabindex="2"
+             required/>
+    </div>
+
+    <div bst-form-group label="{{ 'Description' | translate }}">
+      <textarea id="description"
+                name="description"
+                ng-model="registry.description"
+                tabindex="3">
+      </textarea>
+    </div>
+
+    <div bst-form-group label="{{ 'User Name' | translate }}">
+      <input id="url"
+             name="url"
+             ng-model="registry.username"
+             type="text"
+             tabindex="4"/>
+    </div>
+
+    <div bst-form-group label="{{ 'Password' | translate }}">
+      <input id="url"
+             name="url"
+             ng-model="registry.password"
+             type="text"
+             tabindex="5"/>
+    </div>
+
+    <div bst-form-buttons
+         on-cancel="transitionTo('registries.index')"
+         on-save="save(registry)"
+         working="working">
+    </div>
+
+  </form>
+
+
+</section>

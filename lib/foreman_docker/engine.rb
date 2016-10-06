@@ -4,6 +4,8 @@ require 'fog/fogdocker'
 require 'wicked'
 require 'docker'
 require 'deface'
+require 'bastion'
+
 
 module ForemanDocker
   # Inherit from the Rails module of the parent app (Foreman), not the plugin.
@@ -14,6 +16,16 @@ module ForemanDocker
     config.autoload_paths += Dir["#{config.root}/app/controllers/concerns"]
     config.autoload_paths += Dir["#{config.root}/app/models/concerns"]
 
+    initializer 'foreman_docker.assets_dispatcher',
+            :before => :build_middleware_stack do |app|
+      app.middleware.use ::ActionDispatch::Static,
+        "#{ForemanDocker::Engine.root}/app/assets/javascripts/foreman_docker"
+    end
+
+    initializer 'foreman_docker.engine', :after => :build_middleware_stack do |app|
+      app.routes_reloader.paths << "#{ForemanDocker::Engine.root}/config/engine.rb"
+    end
+
     initializer 'foreman_docker.load_app_instance_data' do |app|
       ForemanDocker::Engine.paths['db/migrate'].existent.each do |path|
         app.config.paths['db/migrate'] << path
@@ -23,14 +35,27 @@ module ForemanDocker
     initializer "foreman_docker.assets.precompile" do |app|
       app.config.assets.precompile += %w(foreman_docker/autocomplete.css
                                          foreman_docker/terminal.css
-                                         foreman_docker/image_step.js)
+                                         foreman_docker/image_step.js
+                                         foreman_docker/foreman_docker.js)
     end
 
-    initializer 'foreman_docker.configure_assets', :group => :assets do
-      SETTINGS[:foreman_docker] =
-        { :assets => { :precompile => ['foreman_docker/autocomplete.css',
-                                       'foreman_docker/terminal.css',
-                                       'foreman_docker/image_step.js'] } }
+    # initializer 'foreman_docker.configure_assets', :group => :assets do
+    #   SETTINGS[:foreman_docker] = {
+    #     :assets => {
+    #       :precompile => ['foreman_docker/autocomplete.css',
+    #                       'foreman_docker/terminal.css',
+    #                       'foreman_docker/image_step.js',
+    #                       'foreman_docker/foreman_docker.js']
+    #     }
+    #   }
+
+    #   app.config.assets.precompile += SETTINGS[:foreman_docker][:assets][:precompile]
+    # end
+
+    config.to_prepare do
+      Bastion.register_plugin(:name => 'foreman_docker',
+                              :javascript => 'foreman_docker/foreman_docker',
+                              :pages => %w(registries))
     end
 
     initializer 'foreman_docker.register_gettext', :after => :load_config_initializers do
@@ -53,9 +78,14 @@ module ForemanDocker
           menu :top_menu, :new_container, :caption => N_('New Container'),
                                           :url_hash => { :controller => :containers,
                                                          :action => :new }
-          menu :top_menu, :registries, :caption => N_('Registries'),
-                                       :url_hash => { :controller => :registries,
-                                                      :action => :index }
+          menu :top_menu, :foreman_docker,
+               :caption => N_('Registries'),
+               :url => '/registries',
+               :url_hash => {
+                 :controller => 'foreman_docker/api/registries',
+                 :action => :index
+               },
+               :engine => ForemanDocker::Engine
         end
 
         security_block :containers do
