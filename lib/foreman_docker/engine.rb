@@ -21,7 +21,7 @@ module ForemanDocker
     end
 
     initializer "foreman_docker.assets.precompile" do |app|
-      app.config.assets.precompile += %w(foreman_docker/autocomplete.css
+      app.config.assets.precompile << %w(foreman_docker/autocomplete.css
                                          foreman_docker/terminal.css
                                          foreman_docker/image_step.js)
     end
