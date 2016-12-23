@@ -1,4 +1,4 @@
-# Foreman Docker Plugin
+# Foreman Docker Plugin!
 
 [![Code Climate](https://codeclimate.com/github/theforeman/foreman-docker/badges/gpa.svg)](https://codeclimate.com/github/theforeman/foreman-docker)
 [![Gem Version](https://badge.fury.io/rb/foreman_docker.svg)](http://badge.fury.io/rb/foreman_docker)
