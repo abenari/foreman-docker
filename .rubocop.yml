@@ -1,3 +1,6 @@
+inherit_from:
+  - .rubocop_todo.yml
+
 AllCops:
   RunRailsCops: true # always run the rails cops
 
