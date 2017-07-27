@@ -6,5 +6,6 @@ module ForemanDocker
     should allow_value('').for(:email)
     should_not allow_value('abcb.com').for(:email)
     should_not allow_value('a').for(:email)
+    should_not allow_value('').for(:url)
   end
 end
