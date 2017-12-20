@@ -290,17 +290,6 @@ Rails/DynamicFindBy:
     - 'app/controllers/containers_controller.rb'
     - 'app/helpers/containers_helper.rb'
 
-# Offense count: 34
-# Cop supports --auto-correct.
-# Configuration parameters: Include.
-# Include: spec/**/*, test/**/*
-Rails/HttpPositionalArguments:
-  Exclude:
-    - 'test/functionals/api/v2/containers_controller_test.rb'
-    - 'test/functionals/api/v2/registries_controller_test.rb'
-    - 'test/functionals/containers_controller_test.rb'
-    - 'test/functionals/containers_steps_controller_test.rb'
-
 # Offense count: 1
 # Cop supports --auto-correct.
 # Configuration parameters: NotNilAndNotEmpty, NotBlank, UnlessBlank.
