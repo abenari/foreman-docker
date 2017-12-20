@@ -273,20 +273,6 @@ Performance/HashEachMethods:
   Exclude:
     - 'app/services/foreman_docker/image_search.rb'
 
-# Offense count: 10
-# Cop supports --auto-correct.
-Rails/ApplicationRecord:
-  Exclude:
-    - 'app/models/container.rb'
-    - 'app/models/docker_container_wizard_state.rb'
-    - 'app/models/docker_container_wizard_states/configuration.rb'
-    - 'app/models/docker_container_wizard_states/environment.rb'
-    - 'app/models/docker_container_wizard_states/image.rb'
-    - 'app/models/docker_container_wizard_states/preliminary.rb'
-    - 'app/models/docker_parameter.rb'
-    - 'app/models/docker_registry.rb'
-    - 'db/migrate/20160605134652_move_parameters_to_docker_parameters.rb'
-
 # Offense count: 2
 # Cop supports --auto-correct.
 # Configuration parameters: NilOrEmpty, NotPresent, UnlessPresent.

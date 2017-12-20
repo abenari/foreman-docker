@@ -1,9 +1,9 @@
 class MoveParametersToDockerParameters < ActiveRecord::Migration[4.2]
-  class FakeDockerParameter < ActiveRecord::Base
+  class FakeDockerParameter < ApplicationRecord
     self.table_name = 'docker_parameters'
   end
 
-  class FakeParameter < ActiveRecord::Base
+  class FakeParameter < ApplicationRecord
     self.table_name = 'parameters'
   end
 
