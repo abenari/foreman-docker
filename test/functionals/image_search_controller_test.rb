@@ -12,9 +12,9 @@ class ImageSearchControllerTest < ActionController::TestCase
 
   setup do
     Service::RegistryApi.stubs(:docker_hub).returns(docker_hub)
-    ComputeResource::ActiveRecord_Relation.any_instance
+    ComputeResource.const_get(:ActiveRecord_Relation).any_instance
       .stubs(:find).returns(compute_resource)
-    DockerRegistry::ActiveRecord_Relation.any_instance
+    DockerRegistry.const_get(:ActiveRecord_Relation).any_instance
       .stubs(:find).returns(registry)
   end
 
