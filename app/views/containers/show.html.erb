@@ -5,7 +5,7 @@
   <div class="col-md-4">
    <div id="myTabContent" class="tab-content">
       <div class="tab-pane active in">
-        <table id="properties_table" class="table table-bordered table-striped">
+        <table id="properties_table" class="<%= table_css_classes %>">
           <tr><th colspan="2"><%= _('Properties') %></th></tr>
             <tr>
               <td><%= _('Name') %></td>
@@ -46,7 +46,7 @@
             <tr>
               <td><%= _('Exposed ports') %></td>
               <td>
-                <table id="exposed_ports" class="table table-bordered" style="table-layout:fixed; word-wrap: break-word">
+                <table id="exposed_ports" class="<%= table_css_classes('table-fixed') %>" style="table-layout:fixed; word-wrap: break-word">
                   <% (@container.in_fog.exposed_ports || []).each do |exposed_port| %>
                   <% pair = exposed_port.first.split("/") %>
                     <tr>
@@ -68,7 +68,7 @@
             <tr>
               <td><%= _('Environment Variables') %></td>
               <td>
-                <table id="environment_variables" class="table table-bordered" style="table-layout:fixed; word-wrap: break-word">
+                <table id="environment_variables" class="<%= table_css_classes('table-fixed') %>" style="table-layout:fixed; word-wrap: break-word">
                   <% (@container.in_fog.environment_variables || []).each do |environment_variable| %>
                   <% pair = environment_variable.split("=") %>
                     <tr>

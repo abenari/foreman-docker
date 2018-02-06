@@ -1,4 +1,4 @@
-<table class="table table-bordered table-hover table-striped" id="environment_variable_table">
+<table class="<%= table_css_classes('table-hover') %>" id="environment_variable_table">
   <tbody>
     <%= f.fields_for :environment_variables, @docker_container_wizard_states_environment.environment_variables do |builder| %>
       <%= render 'foreman_docker/common_parameters/environment_variable', :f => builder %>

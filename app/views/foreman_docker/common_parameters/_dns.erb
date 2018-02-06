@@ -1,4 +1,4 @@
-<table class="table table-bordered table-hover table-striped" id="dns_table">
+<table class="<%= table_css_classes('table-hover') %>" id="dns_table">
   <tbody>
     <%= f.fields_for :dns, @docker_container_wizard_states_environment.dns do |builder| %>
       <%= render 'foreman_docker/common_parameters/dns_entry', :f => builder %>
