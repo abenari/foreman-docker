@@ -11,7 +11,7 @@ Gem::Specification.new do |s|
   s.date        = Date.today.to_s
   s.authors     = ['Daniel Lobato, Amos Benari']
   s.email       = ['dlobatog@redhat.com, abenari@redhat.com']
-  s.homepage    = 'http://github.com/theforeman/foreman-docker'
+  s.homepage    = 'https://github.com/theforeman/foreman_docker'
   s.summary     = 'Provision and manage Docker containers and images from Foreman'
   s.description = 'Provision and manage Docker containers and images from Foreman.'
   s.licenses    = ['GPL-3.0']
