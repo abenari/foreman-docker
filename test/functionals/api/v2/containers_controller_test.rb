@@ -48,14 +48,19 @@ module Api
         context 'deletion' do
           setup do
             Container.any_instance.stubs(:uuid).returns('randomuuid')
+            Fog.mock!
           end
 
+          teardown { Fog.unmock! }
+
+          test_attributes :pid => '12efdf50-9494-48c3-a181-01c495b48c19'
           test 'delete removes a container in foreman and in Docker host' do
-            Fog.mock!
-            delete :destroy, params: { :id => @container.id }
-            Fog.unmock!
+            assert_difference('Container.count', -1) do
+              delete :destroy, params: { :id => @container.id }
+            end
             assert_response :success
             assert_equal ActiveSupport::JSON.decode(response.body)['name'], 'foo'
+            refute Container.exists?(@container.id)
           end
 
           test 'if deletion on Docker host fails, Foreman deletion fails' do
