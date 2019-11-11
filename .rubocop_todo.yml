@@ -159,10 +159,10 @@ Lint/UriRegexp:
 Metrics/AbcSize:
   Max: 30
 
-# Offense count: 19
+# Offense count: 16
 # Configuration parameters: CountComments, ExcludedMethods.
 Metrics/BlockLength:
-  Max: 130
+  Max: 134
 
 # Offense count: 3
 # Configuration parameters: CountComments.

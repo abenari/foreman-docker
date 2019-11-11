@@ -3,6 +3,26 @@ require 'test_plugin_helper'
 class DockerRegistryTest < ActiveSupport::TestCase
   subject { FactoryBot.create(:docker_registry) }
 
+  test_attributes :pid => '8212ab15-8298-4a46-88ba-eaf71069e068'
+  test 'should create with valid name' do
+    docker_registry = FactoryBot.build(:docker_registry)
+    valid_name_list.each do |name|
+      docker_registry.name = name
+      assert docker_registry.valid?, "Validation failed for create with valid name: #{name} length: #{name.length}"
+      assert_equal name, docker_registry.name
+    end
+  end
+
+  test_attributes :pid => 'fdd9c76b-43a7-4ece-8975-3b08241134c8'
+  test 'should update with valid name' do
+    assert DockerRegistry.exists?(subject.id)
+    valid_name_list.each do |name|
+      subject.name = name
+      assert subject.valid?, "Validation failed for update with valid name: #{name} length: #{name.length}"
+      assert_equal name, subject.name
+    end
+  end
+
   test 'used_location_ids should return correct location ids' do
     location = FactoryBot.build(:location)
     r = as_admin do

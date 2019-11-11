@@ -49,10 +49,13 @@ module Api
         assert_equal new_name, @registry.reload.name
       end
 
+      test_attributes :pid => '1a215237-91b5-4fcc-8c18-a9944068ac88'
       test 'deletes a docker registry' do
-        delete :destroy, params: { :id => @registry.id }
+        assert_difference('DockerRegistry.count', -1) do
+          delete :destroy, params: { :id => @registry.id }
+        end
         assert_response :success
-        assert DockerRegistry.where(:id => @registry.id).blank?
+        refute DockerRegistry.exists?(@registry.id)
       end
     end
   end
